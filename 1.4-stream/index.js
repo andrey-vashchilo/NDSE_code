@@ -1,36 +1,98 @@
-const fs = require('fs')
+#!/usr/bin/env node
+const readline = require('readline');
+const fs = require('fs');
 
-const  readerStream = fs.createReadStream('package.json')
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-let data
-readerStream
-.setEncoding('UTF8')
-.on('data', (chank) =>{
-    data += chank
-})
-.on('end', () => {
-    console.log('end', data)
-})
+// Генератор случайных чисел в заданном диапозоне
+function generateRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-const content = 'content \n'
+// Вывод генератора
+const secretNumber = generateRandomNumber(1, 2);
 
-const writerSrt = fs.createWriteStream('output.txt')
-writerSrt.write(content, 'UTF8')
-writerSrt.end()
+// Функция записи в файл
+const logFile = 'games.log';
+function logResult(result, logFile) {
+  fs.appendFileSync(logFile, `${result}\n`, 'utf8');
+}
+console.log('Игра "Орёл или Решка"!');
+//console.log(secretNumber);
+// Функция обрабатывает попытки пользователя
+// rl.question('What is your favorite food? ', (answer) => {
+//     console.log(`Oh, so your favorite food is ${answer}`);
+//   }); 
+// Очистка файла логов перед началом игры
+const gameStart = () => {
+  rl.question('Хотите очистить файл логов? (да/yes/y или нет/no/n): ', (answer) => {
+    console.log(answer);
+    if (answer === 'да' || answer === 'yes' || answer === 'y') {
+      fs.writeFileSync(logFile, '', 'utf8');
+      console.log('Файл логов очищен.');
+      gamePlay();
+      return; 1
+    } else if (answer === 'нет' || answer === 'no' || answer === 'n') {
+      console.log('Файл логов не изменен.');
+      gamePlay();
+      return;
+    } else {
+      gameStart();
+    }
 
-writerSrt.on('finish', () => {
-    console.log('finish')
-})
+  });
+};
 
-writerSrt.on('close', () => {
-    console.log('close')
-})
+// Игра
+const gamePlay = () => {
+  console.log('Введите 1(Орёл) или 2(Решка).');
+  console.log(`Результаты будут сохранены в файле: ${logFile}`);
+  rl.question('Введите число: ', (answer) => {
+    const number = parseInt(answer);
 
-writerSrt.on('error', () => {
-    console.error('error')
-})
+    console.log(number);
 
-let readStr1 = fs.createReadStream('package.json')
-let writeSrt2 = fs.createWriteStream('output.txt')
+    if (isNaN(number)) {
+      console.log('Вы ошиблись (это не цифра), введите цифру 1 или 2.');
+      gamePlay();
+      return;
+    } else if (number < 1 || number > 2) {
+      console.log('Вы ошиблись, введите только цифру 1 или 2.');
+      gamePlay();
+      return;
+    }
 
-readStr1.pipe(writeSrt2)
+    if (number !== secretNumber) {
+      const result = 'Вы не угадали!';
+      console.log(`Вы не угадали!`);
+      console.log(`Попробуйте еще раз`);
+      logResult(result, logFile);
+      gamePlay();
+      return;
+    }
+    if (number === secretNumber) {
+      if (secretNumber === 1) {
+        const result = 'Вы угадали! - Орёл!';
+        console.log(`Вы угадали! - Орёл`);
+        console.log(`Игра завершена. Спасибо за участие!!!`);
+        logResult(result, logFile);
+        rl.close();
+      }
+      if (secretNumber === 2) {
+        const result = 'Вы угадали! - Решка!';
+        console.log(`Вы угадали! - Решка`);
+        console.log(`Игра завершена. Спасибо за участие!!!`);
+        logResult(result, logFile);
+        rl.close();
+      }
+      return;
+    }
+
+    gamePlay();
+  });
+};
+gameStart();
+//gamePlay();

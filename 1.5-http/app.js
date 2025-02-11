@@ -4,14 +4,10 @@ const config = require('./config');
 
 const myAPIKey = process.env.myAPIKey || config.myAPIKey;
 const city = process.env.CITY || config.CITY;
-//console.log(myAPIKey);
-//console.log(city);
 
 
 const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${myAPIKey}&units=metric`;
-// https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-// https://api.openweathermap.org/data/2.5/weather?q={city name},{country code}&appid={API key}
-// https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{country code}&appid={API key}
+
 
 http.get(url, (res) => {
   const { statusCode } = res;

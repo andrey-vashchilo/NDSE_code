@@ -1,0 +1,28 @@
+<%- include('../port/layout-start', { title: title }) %> <%-
+include('../port/menu') %>
+
+<div class="container mt-5">
+	<h1 class="mb-4">Список книг</h1>
+	<a href="/books/create" class="btn btn-primary mb-3">Создать новую книгу</a>
+	<ul class="list-group">
+		<% if (!books.length) { %>
+		<li class="list-group-item">Книги отсутствуют.</li>
+		<% } else { %> <% books.forEach((book, index) => { %>
+		<li
+			class="list-group-item d-flex justify-content-between align-items-center"
+		>
+			<a href="/books/<%= book.id %>"><%= book.title %></a>
+			<span>
+				<a href="/books/<%= book.id %>" class="btn btn-info btn-sm"
+					>Просмотреть</a
+				>
+				<a href="/books/update/<%= book.id %>" class="btn btn-secondary btn-sm"
+					>Редактировать</a
+				>
+			</span>
+		</li>
+		<% }) %> <% } %>
+	</ul>
+</div>
+
+<%- include('../port/layout-end') %>

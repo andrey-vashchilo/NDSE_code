@@ -1,0 +1,25 @@
+<%- include('../port/layout-start', { title: title }) %> <%-
+include('../port/menu') %>
+<div class="container mt-5 w-50">
+	<h1 class="text-center mb-4"><%= book.title %></h1>
+	<h4 class="text-center text-muted mb-4">Автор(ы): <%= book.authors %></h4>
+
+	<div class="card mb-4 shadow">
+		<img
+			src="/api/books/<%= book.id %>/download"
+			class="card-img-top"
+			alt="Обложка книги"
+		/>
+
+		<div class="card-body">
+			<h5 class="card-title">Описание</h5>
+			<p class="card-text"><%= book.description %></p>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<a href="/books" class="btn btn-secondary">Назад к списку книг</a>
+	</div>
+</div>
+
+<%- include('../port/layout-end') %>
